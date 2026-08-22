@@ -7,9 +7,10 @@
     "verdict": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "test": "npm run build && node dist/scoring.test.js"
+    "build": "tsc && vite build gui",
+    "build:cli": "tsc",
+    "dev": "vite dev gui",
+    "test": "npm run build:cli && node dist/scoring.test.js"
   },
   "keywords": [
     "startup",
@@ -22,6 +23,13 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^25.3.1",
-    "typescript": "^5.9.3"
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.1.0",
+    "marked": "^18.0.10",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "^5.9.3",
+    "vite": "^8.2.2"
   }
 }

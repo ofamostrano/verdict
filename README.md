@@ -35,6 +35,9 @@ node dist/index.js gate ai-payroll-compliance-for-contractors
 # 4. Run a full agentic stage (uses the claude CLI)
 node dist/index.js run opportunity-scan ai-payroll-compliance-for-contractors \
   "Research and score this idea per the register structure"
+
+# 5. Or do all of it in the GUI — pipeline view, gate as a form, documents rendered
+node dist/index.js gui
 ```
 
 ## The six-axis rubric
@@ -49,7 +52,7 @@ Each idea lives in `ventures/<slug>/` as plain Markdown and JSON. No database, n
 
 ## Status
 
-v0.1 — working CLI (scan, gate, agentic stages). Next: web GUI where the gate questions and scoring are forms, plus document export to PDF. See [`SPEC.md`](SPEC.md).
+v0.2 — working CLI plus a local web GUI (`verdict gui`): project sidebar, pipeline view with per-stage status, the discovery gate as a form, opportunity scoring in the browser, agentic stages with live streamed output, and rendered documents. Everything stays on 127.0.0.1. Next: assumption-ledger editing in the GUI and PDF export. See [`SPEC.md`](SPEC.md).
 
 ## License
 

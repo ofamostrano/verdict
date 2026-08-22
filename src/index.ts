@@ -10,6 +10,7 @@ import { loadCandidates, scoreCandidate, sortScored, toMarkdown, toCsv } from ".
 import { runGate, gateToMarkdown } from "./gate.js";
 import { listSkills, runStage } from "./agent.js";
 import { initProject, projectDir } from "./project.js";
+import { startServer, openBrowser } from "./server.js";
 
 const HELP = `verdict — venture pipeline CLI (v0.1)
 
@@ -21,6 +22,7 @@ Usage:
   verdict run <stage> <project-slug> "<task>"
                                        Run a pipeline stage agentically (via claude CLI)
   verdict stages                       List available pipeline stages
+  verdict gui [--port N]               Open the Verdict GUI (default port 5317)
   verdict help                         Show this help
 
 Pipeline: opportunity-scan → discovery-gate → build-vs-buy → roi-model
@@ -112,6 +114,14 @@ async function main(): Promise<void> {
       } else {
         for (const s of skills) console.log(s);
       }
+      break;
+    }
+
+    case "gui": {
+      const port = parseInt(getFlag(args, "--port") ?? "5317", 10);
+      const address = await startServer(port);
+      console.log(`Verdict GUI running at ${address}  (Ctrl+C to stop)`);
+      openBrowser(address);
       break;
     }
 
