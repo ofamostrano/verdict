@@ -34,6 +34,13 @@ export const api = {
       json<{ name: string; content: string }>(r)
     ),
 
+  saveFile: (slug: string, name: string, content: string) =>
+    fetch(`/api/projects/${slug}/file`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, content }),
+    }).then((r) => json<{ saved: string }>(r)),
+
   scan: (slug: string | null, candidates: unknown) =>
     fetch("/api/scan", {
       method: "POST",

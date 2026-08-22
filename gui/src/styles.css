@@ -166,3 +166,25 @@ input:focus, textarea:focus { outline: none; border-color: var(--accent-dim); }
 .row { display: flex; gap: 10px; align-items: center; margin: 12px 0; }
 .error { color: var(--red); margin: 10px 0; }
 .ok { color: var(--green); margin: 10px 0; }
+
+.editor {
+  min-height: 60vh;
+  font-family: "SF Mono", "Fira Code", ui-monospace, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+/* ---- print / PDF export: only the open document, on white ---- */
+@media print {
+  body { background: #fff; color: #111; }
+  .sidebar, .pipeline, .no-print, button { display: none !important; }
+  #root { display: block; height: auto; overflow: visible; }
+  .main { display: block; overflow: visible; }
+  .panel { overflow: visible; padding: 0; }
+  .doc { max-width: none; color: #111; }
+  .doc table { display: table; overflow: visible; }
+  .doc th, .doc td { border-color: #999; color: #111; }
+  .doc th { background: #eee; }
+  .doc code { background: #f0f0f0; color: #111; }
+  .doc blockquote { border-left-color: #999; color: #444; }
+}

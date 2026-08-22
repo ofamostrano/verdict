@@ -124,6 +124,15 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, url: URL): P
     return sendJson(res, 200, { name, content: readFileSync(filePath, "utf-8") });
   }
 
+  if (fileMatch && method === "POST") {
+    const dir = safeProjectDir(fileMatch[1]);
+    const { name, content } = JSON.parse(await readBody(req));
+    if (!/^[a-zA-Z0-9._-]+\.(md|json|csv)$/.test(String(name ?? ""))) return sendError(res, 400, "Bad file name.");
+    if (typeof content !== "string" || content.length > 2_000_000) return sendError(res, 400, "Bad content.");
+    writeFileSync(join(dir, name), content, "utf-8");
+    return sendJson(res, 200, { saved: name });
+  }
+
   const filesMatch = path.match(/^\/api\/projects\/([a-z0-9-]+)\/files$/);
   if (filesMatch && method === "GET") {
     const dir = safeProjectDir(filesMatch[1]);

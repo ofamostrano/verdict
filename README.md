@@ -2,6 +2,8 @@
 
 **Run your startup idea through a venture pipeline. Leave with a verdict, not vibes.**
 
+![Verdict GUI — pipeline view with the discovery gate complete](docs/verdict-gui.png)
+
 Verdict is a local-first CLI (GUI coming) that runs your idea through seven stages of real venture methodology — the kind of scoring, kill rules, and evidence bars an investor applies before you ever meet one:
 
 ```
@@ -52,7 +54,7 @@ Each idea lives in `ventures/<slug>/` as plain Markdown and JSON. No database, n
 
 ## Status
 
-v0.2 — working CLI plus a local web GUI (`verdict gui`): project sidebar, pipeline view with per-stage status, the discovery gate as a form, opportunity scoring in the browser, agentic stages with live streamed output, and rendered documents. Everything stays on 127.0.0.1. Next: assumption-ledger editing in the GUI and PDF export. See [`SPEC.md`](SPEC.md).
+v0.3 — CLI plus a local web GUI (`verdict gui`): project sidebar, pipeline view with per-stage status, the discovery gate as a form, opportunity scoring in the browser, agentic stages with live streamed output, rendered documents with in-place editing (fill in your assumption ledger where it lives), and PDF export via the print view. Everything stays on 127.0.0.1. See [`SPEC.md`](SPEC.md).
 
 ## License
 
