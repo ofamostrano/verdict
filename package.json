@@ -1,0 +1,27 @@
+{
+  "name": "verdict",
+  "version": "0.1.0",
+  "description": "Run your startup idea through a venture pipeline and leave with a verdict — scored register, assumption ledger, kill rules — not vibes.",
+  "type": "module",
+  "bin": {
+    "verdict": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "npm run build && node dist/scoring.test.js"
+  },
+  "keywords": [
+    "startup",
+    "venture",
+    "validation",
+    "claude",
+    "agent",
+    "cli"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^25.3.1",
+    "typescript": "^5.9.3"
+  }
+}
