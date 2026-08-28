@@ -15,6 +15,18 @@ const STAGE_OUTPUTS: Record<string, string> = {
   "investor-targeting": "investor-targeting.md",
 };
 
+const STAGE_LABELS: Record<string, string> = {
+  "opportunity-scan": "Opportunity scan",
+  "discovery-gate": "Discovery gate",
+  "build-vs-buy": "Build vs buy",
+  "roi-model": "ROI model",
+  "validation-loop": "Validation loop",
+  "trust-pack": "Trust pack",
+  "investor-targeting": "Investor targeting",
+};
+
+export const stageLabel = (s: string) => STAGE_LABELS[s] ?? s;
+
 export function App() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [pipeline, setPipeline] = useState<string[]>([]);
@@ -44,6 +56,8 @@ export function App() {
   }, [refresh]);
 
   const project = projects.find((p) => p.slug === selected) ?? null;
+  const doneCount = project ? Object.values(project.stages).filter(Boolean).length : 0;
+  const stageCount = project ? Object.keys(project.stages).length : 0;
 
   async function createProject() {
     const name = newName.trim();
@@ -63,29 +77,45 @@ export function App() {
     <>
       <aside className="sidebar">
         <div className="brand">
-          <span className="gavel">⚖</span> Verdict
-          <small>a verdict, not vibes</small>
+          <span className="gavel">⚖</span>
+          <span>
+            Verdict
+            <small>a verdict, not vibes</small>
+          </span>
         </div>
         <div className="project-list">
+          {projects.length > 0 && <div className="list-label">Ventures</div>}
           {projects.map((p) => {
             const done = Object.values(p.stages).filter(Boolean).length;
+            const total = Object.keys(p.stages).length;
             return (
               <div
                 key={p.slug}
-                className={"project-item" + (p.slug === selected ? " active" : "")}
+                className={
+                  "project-item" +
+                  (p.slug === selected ? " active" : "") +
+                  (done === total ? " complete" : "")
+                }
                 onClick={() => {
                   setSelected(p.slug);
                   setStage(null);
                 }}
               >
-                {p.name}
-                <span className="done-count">
-                  {done}/{Object.keys(p.stages).length}
-                </span>
+                <div className="row-top">
+                  <span className="name">{p.name}</span>
+                  <span className="done-count">
+                    {done}/{total}
+                  </span>
+                </div>
+                <div className={"progress" + (done === total ? " full" : "")}>
+                  <i style={{ width: `${total ? (done / total) * 100 : 0}%` }} />
+                </div>
               </div>
             );
           })}
-          {projects.length === 0 && <div className="project-item">No ventures yet — create one below.</div>}
+          {projects.length === 0 && (
+            <div className="project-item">No ventures yet — create one below.</div>
+          )}
         </div>
         <div className="new-project">
           <input
@@ -94,13 +124,27 @@ export function App() {
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && void createProject()}
           />
-          <button className="primary" onClick={() => void createProject()}>
+          <button className="primary" title="Create venture" onClick={() => void createProject()}>
             +
           </button>
         </div>
       </aside>
 
       <main className="main">
+        {project && (
+          <header className="topbar">
+            <h1>{project.name}</h1>
+            <span className="meta">
+              {doneCount === stageCount
+                ? "Pipeline complete"
+                : `${doneCount} of ${stageCount} stages complete`}
+            </span>
+            <div className={"progress" + (doneCount === stageCount ? " full" : "")}>
+              <i style={{ width: `${stageCount ? (doneCount / stageCount) * 100 : 0}%` }} />
+            </div>
+          </header>
+        )}
+
         {project && (
           <nav className="pipeline">
             {pipeline.map((s, i) => (
@@ -109,10 +153,11 @@ export function App() {
                   className={
                     "stage-chip" + (project.stages[s] ? " done" : "") + (s === stage ? " active" : "")
                   }
-                  onClick={() => setStage(s)}
+                  title={project.stages[s] ? "Complete — click to view" : "Not run yet"}
+                  onClick={() => setStage(s === stage ? null : s)}
                 >
-                  <span className="dot" />
-                  {s}
+                  <span className="num">{project.stages[s] ? "✓" : i + 1}</span>
+                  {stageLabel(s)}
                 </span>
                 {i < pipeline.length - 1 && <span className="arrow">→</span>}
               </span>
@@ -124,11 +169,23 @@ export function App() {
           {error && <div className="error">{error}</div>}
           {!project && (
             <div className="empty-state">
+              <div className="mark">⚖</div>
               <h2>Run your idea through the pipeline.</h2>
               <p>
-                Create a venture on the left. Each stage produces a document with a decision in it —
-                Pursue, Hold, or Killed. Killed ideas are evidence of rigor, not wasted work.
+                Each stage produces a document with a decision in it — Pursue, Hold, or Killed.
+                Killed ideas are evidence of rigor, not wasted work.
               </p>
+              <div className="steps">
+                <div>
+                  <b>1</b> Create a venture in the sidebar
+                </div>
+                <div>
+                  <b>2</b> Score it and face the discovery gate
+                </div>
+                <div>
+                  <b>3</b> Let the agentic stages build the case
+                </div>
+              </div>
             </div>
           )}
           {project && !stage && (
@@ -153,6 +210,7 @@ export function App() {
                 key={project.slug + stage}
                 slug={project.slug}
                 stage={stage}
+                label={stageLabel(stage)}
                 outputFile={STAGE_OUTPUTS[stage] ?? `${stage}.md`}
                 done={project.stages[stage]}
                 onFinished={() => void refresh()}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "./api";
 import { DocViewer } from "./DocViewer";
 
@@ -13,6 +13,7 @@ const DEFAULT_TASKS: Record<string, string> = {
 export function RunPanel(props: {
   slug: string;
   stage: string;
+  label: string;
   outputFile: string;
   done: boolean;
   onFinished: () => void;
@@ -21,12 +22,19 @@ export function RunPanel(props: {
   const [output, setOutput] = useState("");
   const [running, setRunning] = useState(false);
   const [showDoc, setShowDoc] = useState(props.done);
+  const streamRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Keep the stream pinned to the latest output while a stage runs.
+    streamRef.current?.scrollTo({ top: streamRef.current.scrollHeight });
+  }, [output]);
 
   if (showDoc && !running && !output) {
     return (
       <div>
         <div className="row">
-          <h2 style={{ margin: 0, flex: 1 }}>{props.stage}</h2>
+          <h2 style={{ margin: 0, flex: 1 }}>{props.label}</h2>
+          <span className="badge">✓ Complete</span>
           <button onClick={() => setShowDoc(false)}>Re-run stage</button>
         </div>
         <DocViewer slug={props.slug} initialFile={props.outputFile} />
@@ -49,7 +57,7 @@ export function RunPanel(props: {
 
   return (
     <div style={{ maxWidth: 860 }}>
-      <h2>{props.stage}</h2>
+      <h2>{props.label}</h2>
       <p className="hint">
         Runs agentically through your local <code>claude</code> CLI on your existing subscription.
         The stage reads the venture&apos;s files and writes {props.outputFile} when done.
@@ -57,13 +65,18 @@ export function RunPanel(props: {
       <textarea value={task} onChange={(e) => setTask(e.target.value)} />
       <div className="row">
         <button className="primary" disabled={running || !task.trim()} onClick={() => void run()}>
+          {running && <span className="spinner" />}
           {running ? "Running…" : "Run stage"}
         </button>
         {props.done && !running && (
           <button onClick={() => setShowDoc(true)}>View existing {props.outputFile}</button>
         )}
       </div>
-      {output && <div className="stream">{output}</div>}
+      {output && (
+        <div className="stream" ref={streamRef}>
+          {output}
+        </div>
+      )}
     </div>
   );
 }

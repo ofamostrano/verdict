@@ -2,6 +2,12 @@ import { useState } from "react";
 import { api } from "./api";
 import { DocViewer } from "./DocViewer";
 
+function verdictTone(verdict: string): string {
+  if (verdict === "Build now") return "good";
+  if (verdict.startsWith("Kill")) return "bad";
+  return "warn";
+}
+
 export function GateForm(props: {
   slug: string;
   questions: string[];
@@ -77,7 +83,7 @@ export function GateForm(props: {
 
       {result ? (
         <>
-          <div className="verdict-box">
+          <div className={"verdict-box " + verdictTone(result.verdict)}>
             <div className="v">{result.verdict}</div>
             <div>{result.reasoning}</div>
           </div>

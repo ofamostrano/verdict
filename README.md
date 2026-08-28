@@ -4,7 +4,7 @@
 
 ![Verdict GUI — pipeline view with the discovery gate complete](docs/verdict-gui.png)
 
-Verdict is a local-first CLI (GUI coming) that runs your idea through seven stages of real venture methodology — the kind of scoring, kill rules, and evidence bars an investor applies before you ever meet one:
+Verdict is a local-first CLI and web GUI that runs your idea through seven stages of real venture methodology — the kind of scoring, kill rules, and evidence bars an investor applies before you ever meet one:
 
 ```
 opportunity-scan → discovery-gate → build-vs-buy → roi-model
